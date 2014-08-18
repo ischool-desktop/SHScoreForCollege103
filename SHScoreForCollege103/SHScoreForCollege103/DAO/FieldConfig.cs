@@ -10,14 +10,8 @@ namespace SHScoreForCollege103.DAO
     /// 大學推甄欄位對照設定檔
     /// </summary>
     [TableName("ischool.score_for_college_103_config")]
-    public class FieldConfig
+    public class FieldConfig:ActiveRecord
     {
-        ///<summary>
-        /// 群組
-        ///</summary>
-        [Field(Field = "group", Indexed = false)]
-        public string Group { get; set; }
-
         ///<summary>
         /// 欄位名稱
         ///</summary>
@@ -34,12 +28,6 @@ namespace SHScoreForCollege103.DAO
         /// 欄位順序
         ///</summary>
         [Field(Field = "field_order", Indexed = false)]
-        public int FieldOrder { get; set; }
-
-        ///<summary>
-        /// 欄位類別數字(主要用在分類使用)
-        ///</summary>
-        [Field(Field = "type_int", Indexed = false)]
-        public int TypeInt { get; set; }
+        public int FieldOrder { get; set; }     
     }
 }
