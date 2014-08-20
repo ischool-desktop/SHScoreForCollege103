@@ -59,5 +59,15 @@ namespace SHScoreForCollege103.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   查詢類型 System.Byte[] 的當地語系化資源。
+        /// </summary>
+        internal static byte[] template {
+            get {
+                object obj = ResourceManager.GetObject("template", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }

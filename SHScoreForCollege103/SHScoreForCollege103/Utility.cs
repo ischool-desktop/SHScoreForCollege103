@@ -189,10 +189,34 @@ from sems_entry_score inner join xpath_table('id','score_info','sems_entry_score
                 Directory.CreateDirectory(path);
             path = Path.Combine(path, reportName + ".csv");
 
-            Workbook wb = new Workbook();            
+            Workbook wb = new Workbook(new MemoryStream(Properties.Resources.template));            
+            wb.Settings.Encoding = Encoding.Default;
+
             wb.Worksheets[0].Cells.ImportDataTable(dt, true, 0, 0);
 
-            wb.Settings.Encoding = Encoding.Default;
+
+            //int rowIdx=1;
+            //int col=0;
+            //foreach (DataColumn dc in dt.Columns)
+            //{
+            //    wb.Worksheets[0].Cells[0, col].PutValue(dc.ColumnName);
+            //    col++;
+            //}
+            //foreach (DataRow dr in dt.Rows)
+            //{
+            //    col = 0;
+            //    foreach (DataColumn dc in dt.Columns)
+            //    {
+            //        if (dc.ColumnName.Contains("總平均"))
+            //        {
+            //            wb.Worksheets[0].Cells[rowIdx, col].Value = string.Format("{0:###.0}", dr[dc.ColumnName]);
+            //        }
+            //        else
+            //            wb.Worksheets[0].Cells[rowIdx, col].PutValue(dr[dc.ColumnName].ToString());
+            //        col++;
+            //    }
+            //    rowIdx++;
+            //}
 
             if (File.Exists(path))
             {
@@ -211,7 +235,8 @@ from sems_entry_score inner join xpath_table('id','score_info','sems_entry_score
             try
             {
                 wb.Save(path, SaveFormat.CSV);
-                System.Diagnostics.Process.Start(path);
+                //System.Diagnostics.Process.Start(path);
+                System.Diagnostics.Process.Start("notepad.exe", path);
             }
             catch
             {

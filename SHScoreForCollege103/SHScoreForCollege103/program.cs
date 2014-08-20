@@ -15,11 +15,11 @@ namespace SHScoreForCollege103
         {
             // 匯入高關懷特殊身分
             Catalog catalog01 = RoleAclSource.Instance["學生"]["報表"];
-            catalog01.Add(new RibbonFeature("SHScoreForCollege103.ScoreForm", "103學年度大學繁星推甄成績檔"));
+            catalog01.Add(new RibbonFeature("SHScoreForCollege103.ScoreForm", "103學年度大學繁星推甄成績csv"));
 
             RibbonBarItem item01 = K12.Presentation.NLDPanels.Student.RibbonBarItems["資料統計"];
-            item01["報表"]["成績相關報表"]["103學年度大學繁星推甄成績檔"].Enable = UserAcl.Current["SHScoreForCollege103.ScoreForm"].Executable;
-            item01["報表"]["成績相關報表"]["103學年度大學繁星推甄成績檔"].Click += delegate
+            item01["報表"]["成績相關報表"]["103學年度大學繁星推甄成績csv"].Enable = UserAcl.Current["SHScoreForCollege103.ScoreForm"].Executable;
+            item01["報表"]["成績相關報表"]["103學年度大學繁星推甄成績csv"].Click += delegate
             {
                 if (K12.Presentation.NLDPanels.Student.SelectedSource.Count > 0)
                 {

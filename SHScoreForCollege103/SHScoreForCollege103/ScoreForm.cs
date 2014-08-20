@@ -25,7 +25,9 @@ namespace SHScoreForCollege103
         // 儲存 UDT Mapping 資料用
         List<FieldConfig> _SaveFieldConfigList;
 
-
+        // 使用原始成績
+        bool _chkSScore = true;
+        
         public ScoreForm()
         {
             InitializeComponent();
@@ -74,7 +76,8 @@ namespace SHScoreForCollege103
                     fc.FieldName = str;
                     dgData.Rows[rowIdx].Tag = fc;
                     dgData.Rows[rowIdx].Cells[colFieldName.Index].Value = fc.FieldName;
-                    dgData.Rows[rowIdx].Cells[colFieldMapping.Index].Value = fc.FieldName;                    
+                    string ffName = fc.FieldName.Replace("(高一上)", "").Replace("(高一下)", "");
+                    dgData.Rows[rowIdx].Cells[colFieldMapping.Index].Value = ffName;
                 }
 
             }
@@ -102,7 +105,7 @@ namespace SHScoreForCollege103
             {
                 Utility.CompletedCSV("大學甄選", dt);
             }
-            btnEnable(true);
+            _bgLoadMapping.RunWorkerAsync();            
         }
 
         void _bgExporData_DoWork(object sender, DoWorkEventArgs e)
@@ -127,8 +130,13 @@ namespace SHScoreForCollege103
 
                 // 填入 columns
                 foreach (FieldConfig fc in _SaveFieldConfigList)
-                    exportDT.Columns.Add(fc.FieldName);
+                {
 
+                    DataColumn column = new DataColumn();
+                    column.DataType = Type.GetType("System.String");
+                    column.ColumnName = fc.FieldName;
+                    exportDT.Columns.Add(column);
+                }
                 List<string> key1List = new List<string>();
                 key1List.Add("學號");
                 key1List.Add("姓名");
@@ -144,105 +152,111 @@ namespace SHScoreForCollege103
                         if (exportDT.Columns.Contains(key))
                             newRow[key] = dr[key];
 
-                    #region 比對學期科目成績
-                    // 比對學期科目成績
-                    if (SemsSubjDataDict.ContainsKey(sid))
+                    // 填入成績初始值
+                    for (int col = 3; col < exportDT.Columns.Count; col++)
                     {
-                        List<DataRow> dd = SemsSubjDataDict[sid];
-                        foreach (DataRow dr1 in dd)
+                        newRow[col] = "-1";
+                    }
+
+                        #region 比對學期科目成績
+                        // 比對學期科目成績
+                        if (SemsSubjDataDict.ContainsKey(sid))
                         {
-                            if (dr1["學期科目成績年級"].ToString() == "1" && dr1["學期科目成績學期"].ToString() == "1")
+                            List<DataRow> dd = SemsSubjDataDict[sid];
+                            foreach (DataRow dr1 in dd)
                             {
-                                string subjName = dr1["學期科目名稱"].ToString();
-
-                                foreach (FieldConfig fc in _SaveFieldConfigList)
+                                if (dr1["學期科目成績年級"].ToString() == "1" && dr1["學期科目成績學期"].ToString() == "1")
                                 {
-                                    if (fc.FieldName.Contains("一上") && fc.FieldMapping == subjName)
+                                    string subjName = dr1["學期科目名稱"].ToString();
+
+                                    foreach (FieldConfig fc in _SaveFieldConfigList)
                                     {
-                                        newRow[fc.FieldName] = dr1["學期科目原始成績"].ToString();
-                                        break;
+                                        if (fc.FieldName.Contains("一上") && fc.FieldMapping == subjName)
+                                        {
+                                            newRow[fc.FieldName] = ParseSubjScore(dr1);
+                                            break;
+                                        }
                                     }
+
                                 }
 
-                            }
-
-                            if (dr1["學期科目成績年級"].ToString() == "1" && dr1["學期科目成績學期"].ToString() == "2")
-                            {
-                                string subjName = dr1["學期科目名稱"].ToString();
-
-                                foreach (FieldConfig fc in _SaveFieldConfigList)
+                                if (dr1["學期科目成績年級"].ToString() == "1" && dr1["學期科目成績學期"].ToString() == "2")
                                 {
-                                    if (fc.FieldName.Contains("一下") && fc.FieldMapping == subjName)
+                                    string subjName = dr1["學期科目名稱"].ToString();
+
+                                    foreach (FieldConfig fc in _SaveFieldConfigList)
                                     {
-                                        newRow[fc.FieldName] = dr1["學期科目原始成績"].ToString();
-                                        break;
+                                        if (fc.FieldName.Contains("一下") && fc.FieldMapping == subjName)
+                                        {
+                                            newRow[fc.FieldName] = ParseSubjScore(dr1);
+                                            break;
+                                        }
                                     }
+
                                 }
 
-                            }
-
-                            if (dr1["學期科目成績年級"].ToString() == "2" && dr1["學期科目成績學期"].ToString() == "1")
-                            {
-                                string subjName = dr1["學期科目名稱"].ToString();
-
-                                foreach (FieldConfig fc in _SaveFieldConfigList)
+                                if (dr1["學期科目成績年級"].ToString() == "2" && dr1["學期科目成績學期"].ToString() == "1")
                                 {
-                                    if (fc.FieldName.Contains("二上") && fc.FieldMapping == subjName)
+                                    string subjName = dr1["學期科目名稱"].ToString();
+
+                                    foreach (FieldConfig fc in _SaveFieldConfigList)
                                     {
-                                        newRow[fc.FieldName] = dr1["學期科目原始成績"].ToString();
-                                        break;
+                                        if (fc.FieldName.Contains("二上") && fc.FieldMapping == subjName)
+                                        {
+                                            newRow[fc.FieldName] = ParseSubjScore(dr1);
+                                            break;
+                                        }
                                     }
+
                                 }
 
-                            }
-
-                            if (dr1["學期科目成績年級"].ToString() == "2" && dr1["學期科目成績學期"].ToString() == "2")
-                            {
-                                string subjName = dr1["學期科目名稱"].ToString();
-
-                                foreach (FieldConfig fc in _SaveFieldConfigList)
+                                if (dr1["學期科目成績年級"].ToString() == "2" && dr1["學期科目成績學期"].ToString() == "2")
                                 {
-                                    if (fc.FieldName.Contains("二下") && fc.FieldMapping == subjName)
+                                    string subjName = dr1["學期科目名稱"].ToString();
+
+                                    foreach (FieldConfig fc in _SaveFieldConfigList)
                                     {
-                                        newRow[fc.FieldName] = dr1["學期科目原始成績"].ToString();
-                                        break;
+                                        if (fc.FieldName.Contains("二下") && fc.FieldMapping == subjName)
+                                        {
+                                            newRow[fc.FieldName] = ParseSubjScore(dr1);
+                                            break;
+                                        }
                                     }
+
                                 }
 
-                            }
 
-
-                            if (dr1["學期科目成績年級"].ToString() == "3" && dr1["學期科目成績學期"].ToString() == "1")
-                            {
-                                string subjName = dr1["學期科目名稱"].ToString();
-
-                                foreach (FieldConfig fc in _SaveFieldConfigList)
+                                if (dr1["學期科目成績年級"].ToString() == "3" && dr1["學期科目成績學期"].ToString() == "1")
                                 {
-                                    if (fc.FieldName.Contains("三上") && fc.FieldMapping == subjName)
+                                    string subjName = dr1["學期科目名稱"].ToString();
+
+                                    foreach (FieldConfig fc in _SaveFieldConfigList)
                                     {
-                                        newRow[fc.FieldName] = dr1["學期科目原始成績"].ToString();
-                                        break;
+                                        if (fc.FieldName.Contains("三上") && fc.FieldMapping == subjName)
+                                        {
+                                            newRow[fc.FieldName] = ParseSubjScore(dr1);
+                                            break;
+                                        }
                                     }
+
                                 }
 
-                            }
-
-                            if (dr1["學期科目成績年級"].ToString() == "3" && dr1["學期科目成績學期"].ToString() == "2")
-                            {
-                                string subjName = dr1["學期科目名稱"].ToString();
-
-                                foreach (FieldConfig fc in _SaveFieldConfigList)
+                                if (dr1["學期科目成績年級"].ToString() == "3" && dr1["學期科目成績學期"].ToString() == "2")
                                 {
-                                    if (fc.FieldName.Contains("三下") && fc.FieldMapping == subjName)
-                                    {
-                                        newRow[fc.FieldName] = dr1["學期科目原始成績"].ToString();
-                                        break;
-                                    }
-                                }
+                                    string subjName = dr1["學期科目名稱"].ToString();
 
+                                    foreach (FieldConfig fc in _SaveFieldConfigList)
+                                    {
+                                        if (fc.FieldName.Contains("三下") && fc.FieldMapping == subjName)
+                                        {
+                                            newRow[fc.FieldName] = ParseSubjScore(dr1);
+                                            break;
+                                        }
+                                    }
+
+                                }
                             }
                         }
-                    }
                     #endregion
 
                     #region 比對學期分項成績
@@ -256,7 +270,7 @@ namespace SHScoreForCollege103
                                 {
                                     if (fc.FieldName.Contains("一上") && fc.FieldName.Contains("學業總平均"))
                                     {
-                                        newRow[fc.FieldName] = dr2["成績"].ToString();
+                                        newRow[fc.FieldName] = ParseEntryScore(dr2);
                                         break;
                                     }
                                 }
@@ -267,7 +281,7 @@ namespace SHScoreForCollege103
                                 {
                                     if (fc.FieldName.Contains("一下") && fc.FieldName.Contains("學業總平均"))
                                     {
-                                        newRow[fc.FieldName] = dr2["成績"].ToString();
+                                        newRow[fc.FieldName] = ParseEntryScore(dr2);
                                         break;
                                     }
                                 }
@@ -279,7 +293,7 @@ namespace SHScoreForCollege103
                                 {
                                     if (fc.FieldName.Contains("二上") && fc.FieldName.Contains("學業總平均"))
                                     {
-                                        newRow[fc.FieldName] = dr2["成績"].ToString();
+                                        newRow[fc.FieldName] = ParseEntryScore(dr2);
                                         break;
                                     }
                                 }
@@ -290,7 +304,7 @@ namespace SHScoreForCollege103
                                 {
                                     if (fc.FieldName.Contains("二下") && fc.FieldName.Contains("學業總平均"))
                                     {
-                                        newRow[fc.FieldName] = dr2["成績"].ToString();
+                                        newRow[fc.FieldName] = ParseEntryScore(dr2);
                                         break;
                                     }
                                 }
@@ -302,7 +316,7 @@ namespace SHScoreForCollege103
                                 {
                                     if (fc.FieldName.Contains("三上") && fc.FieldName.Contains("學業總平均"))
                                     {
-                                        newRow[fc.FieldName] = dr2["成績"].ToString();
+                                        newRow[fc.FieldName] = ParseEntryScore(dr2);
                                         break;
                                     }
                                 }
@@ -313,7 +327,7 @@ namespace SHScoreForCollege103
                                 {
                                     if (fc.FieldName.Contains("三下") && fc.FieldName.Contains("學業總平均"))
                                     {
-                                        newRow[fc.FieldName] = dr2["成績"].ToString();
+                                        newRow[fc.FieldName] = ParseEntryScore(dr2);
                                         break;
                                     }
                                 }
@@ -328,8 +342,51 @@ namespace SHScoreForCollege103
 
                 e.Result = exportDT;
             }
-        }        
-    
+        }
+
+        private decimal ParseSubjScore(DataRow dr)
+        {
+            decimal d1, d2;
+            if (_chkSScore)
+            {
+                decimal.TryParse(dr["學期科目原始成績"].ToString(), out d1);
+                return d1;
+            }
+            else
+            {
+                    decimal.TryParse(dr["學期科目原始成績"].ToString(), out d1);
+                    decimal.TryParse(dr["學期科目補考成績"].ToString(), out d2);
+
+                    if (d1 >= d2)
+                        return d1;
+                    else
+                        return d2;
+            }        
+        }
+
+        private string ParseEntryScore(DataRow dr)
+        {
+            string retVal = "";
+            decimal dd;
+            if (_chkSScore && dr["分項"].ToString() == "學業(原始)")
+            {
+                if (decimal.TryParse(dr["成績"].ToString(), out dd))
+                {
+                    // 四捨五入
+                    retVal = string.Format("{0:###.0}", Math.Round(dd, 1, MidpointRounding.AwayFromZero));
+                }
+            }
+            else
+            {
+                if (decimal.TryParse(dr["成績"].ToString(), out dd))
+                {
+                    // 四捨五入
+                    retVal = string.Format("{0:###.0}", Math.Round(dd, 1, MidpointRounding.AwayFromZero));
+
+                }
+            }
+            return retVal;
+        }
         private void btnExit_Click(object sender, EventArgs e)
         {
             this.Close();
@@ -348,8 +405,7 @@ namespace SHScoreForCollege103
         {
             btnExportMaping.Enabled = bo;
             btnImportMapping.Enabled = bo;
-            btnExportCSV.Enabled = bo;
-            btnSave.Enabled = bo;
+            btnExportCSV.Enabled = bo;            
         }
 
         private void btnExportMaping_Click(object sender, EventArgs e)
@@ -408,6 +464,8 @@ namespace SHScoreForCollege103
                         }
 
                         FISCA.Presentation.Controls.MsgBox.Show("匯入完成");
+                        SaveConfig();
+                        _bgLoadMapping.RunWorkerAsync();
                     }
                 }            
         }
@@ -473,9 +531,17 @@ namespace SHScoreForCollege103
         private void btnExportCSV_Click(object sender, EventArgs e)
         {
                 btnEnable(false);
-                
-                // 產生資料
-                _bgExporData.RunWorkerAsync();
+
+                if (cboSubjectScoreType.Text == "原始成績")
+                    _chkSScore = true;
+                else
+                    _chkSScore = false;
+
+                if (SaveConfig())
+                {
+                    // 產生資料
+                    _bgExporData.RunWorkerAsync();
+                }
             
         }
 
@@ -536,9 +602,8 @@ namespace SHScoreForCollege103
                     if (dgvr.IsNewRow)
                         continue;
 
-                    FieldConfig fc = dgvr.Tag as FieldConfig;
-                    if (fc == null)
-                        fc = new FieldConfig();
+                    FieldConfig fc = new FieldConfig();
+                    
 
                     if (dgvr.Cells[colFieldName.Index].Value != null)
                         fc.FieldName = dgvr.Cells[colFieldName.Index].Value.ToString();
@@ -558,15 +623,9 @@ namespace SHScoreForCollege103
                 _SaveFieldConfigList.SaveAll();
             }
             return pass;
-        }
+        }        
 
-        private void btnSave_Click(object sender, EventArgs e)
-        {
-            btnEnable(false);            
-            SaveConfig();
-            _bgLoadMapping.RunWorkerAsync();
-            btnEnable(true);
-        }
+    
 
 
 

@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dgData = new DevComponents.DotNetBar.Controls.DataGridViewX();
             this.colFieldName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colFieldMapping = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -39,7 +39,6 @@
             this.btnExit = new DevComponents.DotNetBar.ButtonX();
             this.btnExportCSV = new DevComponents.DotNetBar.ButtonX();
             this.labelX2 = new DevComponents.DotNetBar.LabelX();
-            this.btnSave = new DevComponents.DotNetBar.ButtonX();
             ((System.ComponentModel.ISupportInitialize)(this.dgData)).BeginInit();
             this.SuspendLayout();
             // 
@@ -53,14 +52,14 @@
             this.dgData.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colFieldName,
             this.colFieldMapping});
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgData.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgData.DefaultCellStyle = dataGridViewCellStyle2;
             this.dgData.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(215)))), ((int)(((byte)(229)))));
             this.dgData.Location = new System.Drawing.Point(12, 39);
             this.dgData.Name = "dgData";
@@ -92,9 +91,9 @@
             this.labelX1.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.labelX1.Location = new System.Drawing.Point(12, 305);
             this.labelX1.Name = "labelX1";
-            this.labelX1.Size = new System.Drawing.Size(87, 21);
+            this.labelX1.Size = new System.Drawing.Size(60, 21);
             this.labelX1.TabIndex = 1;
-            this.labelX1.Text = "科目成績採用";
+            this.labelX1.Text = "成績採用";
             // 
             // cboSubjectScoreType
             // 
@@ -103,9 +102,9 @@
             this.cboSubjectScoreType.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cboSubjectScoreType.FormattingEnabled = true;
             this.cboSubjectScoreType.ItemHeight = 19;
-            this.cboSubjectScoreType.Location = new System.Drawing.Point(106, 303);
+            this.cboSubjectScoreType.Location = new System.Drawing.Point(72, 303);
             this.cboSubjectScoreType.Name = "cboSubjectScoreType";
-            this.cboSubjectScoreType.Size = new System.Drawing.Size(121, 25);
+            this.cboSubjectScoreType.Size = new System.Drawing.Size(155, 25);
             this.cboSubjectScoreType.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
             this.cboSubjectScoreType.TabIndex = 2;
             // 
@@ -184,27 +183,11 @@
             this.labelX2.TabIndex = 7;
             this.labelX2.Text = "欄位對照表";
             // 
-            // btnSave
-            // 
-            this.btnSave.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-            this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnSave.AutoSize = true;
-            this.btnSave.BackColor = System.Drawing.Color.Transparent;
-            this.btnSave.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
-            this.btnSave.Location = new System.Drawing.Point(174, 341);
-            this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(75, 25);
-            this.btnSave.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-            this.btnSave.TabIndex = 8;
-            this.btnSave.Text = "儲存對照";
-            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
-            // 
             // ScoreForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(511, 378);
-            this.Controls.Add(this.btnSave);
             this.Controls.Add(this.labelX2);
             this.Controls.Add(this.btnExit);
             this.Controls.Add(this.btnExportCSV);
@@ -215,7 +198,7 @@
             this.Controls.Add(this.dgData);
             this.DoubleBuffered = true;
             this.Name = "ScoreForm";
-            this.Text = "在校成績產生csv檔";
+            this.Text = "103學年度大學繁星推甄成績csv";
             this.Load += new System.EventHandler(this.ScoreForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgData)).EndInit();
             this.ResumeLayout(false);
@@ -235,6 +218,5 @@
         private DevComponents.DotNetBar.ButtonX btnExit;
         private DevComponents.DotNetBar.ButtonX btnExportCSV;
         private DevComponents.DotNetBar.LabelX labelX2;
-        private DevComponents.DotNetBar.ButtonX btnSave;
     }
 }
