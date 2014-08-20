@@ -39,6 +39,7 @@
             this.btnExit = new DevComponents.DotNetBar.ButtonX();
             this.btnExportCSV = new DevComponents.DotNetBar.ButtonX();
             this.labelX2 = new DevComponents.DotNetBar.LabelX();
+            this.btnSave = new DevComponents.DotNetBar.ButtonX();
             ((System.ComponentModel.ISupportInitialize)(this.dgData)).BeginInit();
             this.SuspendLayout();
             // 
@@ -130,7 +131,7 @@
             this.btnImportMapping.AutoSize = true;
             this.btnImportMapping.BackColor = System.Drawing.Color.Transparent;
             this.btnImportMapping.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
-            this.btnImportMapping.Location = new System.Drawing.Point(106, 341);
+            this.btnImportMapping.Location = new System.Drawing.Point(93, 341);
             this.btnImportMapping.Name = "btnImportMapping";
             this.btnImportMapping.Size = new System.Drawing.Size(75, 25);
             this.btnImportMapping.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
@@ -183,11 +184,27 @@
             this.labelX2.TabIndex = 7;
             this.labelX2.Text = "欄位對照表";
             // 
+            // btnSave
+            // 
+            this.btnSave.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+            this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnSave.AutoSize = true;
+            this.btnSave.BackColor = System.Drawing.Color.Transparent;
+            this.btnSave.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
+            this.btnSave.Location = new System.Drawing.Point(174, 341);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(75, 25);
+            this.btnSave.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+            this.btnSave.TabIndex = 8;
+            this.btnSave.Text = "儲存對照";
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            // 
             // ScoreForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(511, 378);
+            this.Controls.Add(this.btnSave);
             this.Controls.Add(this.labelX2);
             this.Controls.Add(this.btnExit);
             this.Controls.Add(this.btnExportCSV);
@@ -218,5 +235,6 @@
         private DevComponents.DotNetBar.ButtonX btnExit;
         private DevComponents.DotNetBar.ButtonX btnExportCSV;
         private DevComponents.DotNetBar.LabelX labelX2;
+        private DevComponents.DotNetBar.ButtonX btnSave;
     }
 }

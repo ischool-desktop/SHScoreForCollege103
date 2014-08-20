@@ -272,7 +272,54 @@ namespace SHScoreForCollege103
                                     }
                                 }
                             }
-                        }                    
+
+                            if (dr2["年級"].ToString() == "2" && dr2["學期"].ToString() == "1" && dr2["分項"].ToString().Contains("學業"))
+                            {
+                                foreach (FieldConfig fc in _SaveFieldConfigList)
+                                {
+                                    if (fc.FieldName.Contains("二上") && fc.FieldName.Contains("學業總平均"))
+                                    {
+                                        newRow[fc.FieldName] = dr2["成績"].ToString();
+                                        break;
+                                    }
+                                }
+                            }
+                            if (dr2["年級"].ToString() == "2" && dr2["學期"].ToString() == "2" && dr2["分項"].ToString().Contains("學業"))
+                            {
+                                foreach (FieldConfig fc in _SaveFieldConfigList)
+                                {
+                                    if (fc.FieldName.Contains("二下") && fc.FieldName.Contains("學業總平均"))
+                                    {
+                                        newRow[fc.FieldName] = dr2["成績"].ToString();
+                                        break;
+                                    }
+                                }
+                            }
+
+                            if (dr2["年級"].ToString() == "3" && dr2["學期"].ToString() == "1" && dr2["分項"].ToString().Contains("學業"))
+                            {
+                                foreach (FieldConfig fc in _SaveFieldConfigList)
+                                {
+                                    if (fc.FieldName.Contains("三上") && fc.FieldName.Contains("學業總平均"))
+                                    {
+                                        newRow[fc.FieldName] = dr2["成績"].ToString();
+                                        break;
+                                    }
+                                }
+                            }
+                            if (dr2["年級"].ToString() == "3" && dr2["學期"].ToString() == "2" && dr2["分項"].ToString().Contains("學業"))
+                            {
+                                foreach (FieldConfig fc in _SaveFieldConfigList)
+                                {
+                                    if (fc.FieldName.Contains("三下") && fc.FieldName.Contains("學業總平均"))
+                                    {
+                                        newRow[fc.FieldName] = dr2["成績"].ToString();
+                                        break;
+                                    }
+                                }
+                            }
+
+                        }
                     }
                     #endregion
 
@@ -290,6 +337,9 @@ namespace SHScoreForCollege103
 
         private void ScoreForm_Load(object sender, EventArgs e)
         {
+            cboSubjectScoreType.Items.Add("原始成績");
+            cboSubjectScoreType.Items.Add("原始及補考成績擇優");
+            cboSubjectScoreType.SelectedIndex = 0;
             btnEnable(false);
             _bgLoadMapping.RunWorkerAsync();
         }
@@ -299,6 +349,7 @@ namespace SHScoreForCollege103
             btnExportMaping.Enabled = bo;
             btnImportMapping.Enabled = bo;
             btnExportCSV.Enabled = bo;
+            btnSave.Enabled = bo;
         }
 
         private void btnExportMaping_Click(object sender, EventArgs e)
@@ -331,8 +382,34 @@ namespace SHScoreForCollege103
         private void btnImportMapping_Click(object sender, EventArgs e)
         {
             // 匯入對照表
-         
-            
+               OpenFileDialog od = new OpenFileDialog ();
+                od.Title="讀取匯入檔案";
+                od.Filter="Excel檔案 (*.xls)|*.xls|所有檔案 (*.*)|*.*";
+
+                if (od.ShowDialog() == DialogResult.OK)
+                {
+                    Workbook iwb = new Workbook(@od.FileName);
+
+                    bool chkRead = true;
+
+                    if (iwb.Worksheets[0].Cells[0, 0].StringValue != "甄選欄位名稱" || iwb.Worksheets[0].Cells[0, 1].StringValue != "名稱對應系統內")
+                    {
+                        chkRead = false;
+                        FISCA.Presentation.Controls.MsgBox.Show("欄位名稱錯誤無法開啟檔案。");
+                    }
+                    if (chkRead)
+                    {
+                        dgData.Rows.Clear();
+                        for (int row = 1; row <= iwb.Worksheets[0].Cells.MaxDataRow; row++)
+                        {
+                            int rowIdx = dgData.Rows.Add();
+                            dgData.Rows[rowIdx].Cells[colFieldName.Index].Value = iwb.Worksheets[0].Cells[row, 0].StringValue;
+                            dgData.Rows[rowIdx].Cells[colFieldMapping.Index].Value = iwb.Worksheets[0].Cells[row, 1].StringValue;
+                        }
+
+                        FISCA.Presentation.Controls.MsgBox.Show("匯入完成");
+                    }
+                }            
         }
 
         /// <summary>
@@ -395,14 +472,11 @@ namespace SHScoreForCollege103
 
         private void btnExportCSV_Click(object sender, EventArgs e)
         {
-            if (SaveConfig())
-            {
                 btnEnable(false);
                 
                 // 產生資料
                 _bgExporData.RunWorkerAsync();
             
-            }           
         }
 
         /// <summary>
@@ -445,9 +519,15 @@ namespace SHScoreForCollege103
                 pass = false;
             }
             else
-            { 
-                // 儲存畫面值到 UDT
-                
+            {
+ 
+               // 刪除舊資料
+                foreach (FieldConfig fc in _FieldConfigList)
+                    fc.Deleted = true;
+
+                _FieldConfigList.SaveAll();
+
+                // 儲存畫面值到 UDT                
                 List<string> fiedNameList = new List<string>();
                 _SaveFieldConfigList.Clear();
                 int fieldOrder = 0;
@@ -474,27 +554,18 @@ namespace SHScoreForCollege103
                     _SaveFieldConfigList.Add(fc);
                 }
             
-                // 檢查不要需要刪除
-                List<FieldConfig> delDataList = new List<FieldConfig>();
-
-                foreach (FieldConfig fc in _FieldConfigList)
-                {
-                    if (!fiedNameList.Contains(fc.FieldName))
-                        delDataList.Add(fc);
-                }
-
-                // 刪除多餘資料
-                if (delDataList.Count > 0)
-                {
-                    foreach (FieldConfig fc in delDataList)
-                        fc.Deleted = true;
-                    delDataList.SaveAll();                
-                }
-
                 // 儲存資料
                 _SaveFieldConfigList.SaveAll();
             }
             return pass;
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            btnEnable(false);            
+            SaveConfig();
+            _bgLoadMapping.RunWorkerAsync();
+            btnEnable(true);
         }
 
 
