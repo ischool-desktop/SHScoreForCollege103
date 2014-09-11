@@ -233,7 +233,7 @@ from sems_entry_score inner join xpath_table('id','score_info','sems_entry_score
             }
 
             try
-            {
+            {                
                 wb.Save(path, SaveFormat.CSV);
                 //System.Diagnostics.Process.Start(path);
                 System.Diagnostics.Process.Start("notepad.exe", path);
@@ -258,6 +258,80 @@ from sems_entry_score inner join xpath_table('id','score_info','sems_entry_score
                     }
                 }
             }
+        }
+
+        public static void CompletedXlsCsv(string inputReportName, DataTable dt)
+        {
+
+            #region 儲存檔案
+            string reportName = inputReportName;
+
+            string path = Path.Combine(System.Windows.Forms.Application.StartupPath, "Reports");
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+            path = Path.Combine(path, reportName + ".csv");
+
+            if (File.Exists(path))
+            {
+                int i = 1;
+                while (true)
+                {
+                    string newPath = Path.GetDirectoryName(path) + "\\" + Path.GetFileNameWithoutExtension(path) + (i++) + Path.GetExtension(path);
+                    if (!File.Exists(newPath))
+                    {
+                        path = newPath;
+                        break;
+                    }
+                }
+            }
+            
+           // StreamWriter sw = new StreamWriter(path, false, System.Text.Encoding.Unicode);
+            StreamWriter sw = new StreamWriter(path, false, System.Text.Encoding.Default);
+            DataTable dataTable = dt;
+
+            List<string> strList = new List<string>();
+            foreach (DataColumn dc in dt.Columns)
+                strList.Add(dc.ColumnName);
+
+            sw.WriteLine(string.Join(",", strList.ToArray()));            
+
+            foreach (DataRow dr in dt.Rows)
+            {
+                List<string> subList = new List<string>();
+                for (int col = 0; col < dt.Columns.Count; col++)
+                {
+                    subList.Add(dr[col].ToString());
+                }
+                sw.WriteLine(string.Join(",", subList.ToArray()));              
+            }
+         
+            sw.Close();
+            try
+            {
+                System.Diagnostics.Process.Start("notepad.exe", path);
+                //System.Diagnostics.Process.Start(path);
+            }
+            catch
+            {
+                try
+                {
+                    System.Windows.Forms.SaveFileDialog sd = new System.Windows.Forms.SaveFileDialog();
+                    sd.Title = "另存新檔";
+                    sd.FileName = reportName + ".csv";
+                    sd.Filter = "csv檔案 (*.csv)|*.txt|所有檔案 (*.*)|*.*";
+                    if (sd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                    {
+                        System.Diagnostics.Process.Start(sd.FileName);
+                    }
+                }
+                catch
+                {
+                    FISCA.Presentation.Controls.MsgBox.Show("指定路徑無法存取。", "建立檔案失敗", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+                    return;
+                }
+            }
+            #endregion
+
         }
     }
 }

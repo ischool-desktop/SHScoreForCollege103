@@ -99,11 +99,20 @@ namespace SHScoreForCollege103
         {
             // 匯出至csv
 
-            DataTable dt = e.Result as DataTable;
-            
-            if (dt != null)
+            try
             {
-                Utility.CompletedCSV("大學甄選", dt);
+                DataTable dt = e.Result as DataTable;
+
+                if (dt != null)
+                {
+                 //   Utility.CompletedCSV("大學甄選", dt);
+                    Utility.CompletedXlsCsv("大學甄選", dt);
+                }
+            }
+            catch (Exception ex)
+            {
+                SmartSchool.ErrorReporting.ErrorMessgae errMsg = new SmartSchool.ErrorReporting.ErrorMessgae(ex);
+                FISCA.Presentation.Controls.MsgBox.Show("產生 csv 檔案發生錯誤:"+ex.Message);                
             }
             _bgLoadMapping.RunWorkerAsync();            
         }
@@ -165,7 +174,7 @@ namespace SHScoreForCollege103
                             List<DataRow> dd = SemsSubjDataDict[sid];
                             foreach (DataRow dr1 in dd)
                             {
-                                if (dr1["學期科目成績年級"].ToString() == "1" && dr1["學期科目成績學期"].ToString() == "1")
+                                if ((dr1["學期科目成績年級"].ToString() == "1" || dr1["學期科目成績年級"].ToString() == "4") && dr1["學期科目成績學期"].ToString() == "1")
                                 {
                                     string subjName = dr1["學期科目名稱"].ToString();
 
@@ -180,7 +189,7 @@ namespace SHScoreForCollege103
 
                                 }
 
-                                if (dr1["學期科目成績年級"].ToString() == "1" && dr1["學期科目成績學期"].ToString() == "2")
+                                if ((dr1["學期科目成績年級"].ToString() == "1" || dr1["學期科目成績年級"].ToString() == "4") && dr1["學期科目成績學期"].ToString() == "2")
                                 {
                                     string subjName = dr1["學期科目名稱"].ToString();
 
@@ -195,7 +204,7 @@ namespace SHScoreForCollege103
 
                                 }
 
-                                if (dr1["學期科目成績年級"].ToString() == "2" && dr1["學期科目成績學期"].ToString() == "1")
+                                if ((dr1["學期科目成績年級"].ToString() == "2" || dr1["學期科目成績年級"].ToString() == "5") && dr1["學期科目成績學期"].ToString() == "1")
                                 {
                                     string subjName = dr1["學期科目名稱"].ToString();
 
@@ -210,7 +219,7 @@ namespace SHScoreForCollege103
 
                                 }
 
-                                if (dr1["學期科目成績年級"].ToString() == "2" && dr1["學期科目成績學期"].ToString() == "2")
+                                if ((dr1["學期科目成績年級"].ToString() == "2" || dr1["學期科目成績年級"].ToString() == "5") && dr1["學期科目成績學期"].ToString() == "2")
                                 {
                                     string subjName = dr1["學期科目名稱"].ToString();
 
@@ -226,7 +235,7 @@ namespace SHScoreForCollege103
                                 }
 
 
-                                if (dr1["學期科目成績年級"].ToString() == "3" && dr1["學期科目成績學期"].ToString() == "1")
+                                if ((dr1["學期科目成績年級"].ToString() == "3" || dr1["學期科目成績年級"].ToString() == "6") && dr1["學期科目成績學期"].ToString() == "1")
                                 {
                                     string subjName = dr1["學期科目名稱"].ToString();
 
@@ -241,7 +250,7 @@ namespace SHScoreForCollege103
 
                                 }
 
-                                if (dr1["學期科目成績年級"].ToString() == "3" && dr1["學期科目成績學期"].ToString() == "2")
+                                if ((dr1["學期科目成績年級"].ToString() == "3" || dr1["學期科目成績年級"].ToString() == "6") && dr1["學期科目成績學期"].ToString() == "2")
                                 {
                                     string subjName = dr1["學期科目名稱"].ToString();
 
@@ -264,7 +273,7 @@ namespace SHScoreForCollege103
                     {
                         foreach (DataRow dr2 in SemsEntryDataDict[sid])
                         {
-                            if (dr2["年級"].ToString() == "1" && dr2["學期"].ToString() == "1" && dr2["分項"].ToString().Contains("學業"))
+                            if ((dr2["年級"].ToString() == "1" || dr2["年級"].ToString() == "4") && dr2["學期"].ToString() == "1" && dr2["分項"].ToString().Contains("學業"))
                             {
                                 foreach (FieldConfig fc in _SaveFieldConfigList)
                                 {
@@ -275,7 +284,7 @@ namespace SHScoreForCollege103
                                     }
                                 }
                             }
-                            if (dr2["年級"].ToString() == "1" && dr2["學期"].ToString() == "2" && dr2["分項"].ToString().Contains("學業"))
+                            if ((dr2["年級"].ToString() == "1" || dr2["年級"].ToString() == "4") && dr2["學期"].ToString() == "2" && dr2["分項"].ToString().Contains("學業"))
                             {
                                 foreach (FieldConfig fc in _SaveFieldConfigList)
                                 {
@@ -287,7 +296,7 @@ namespace SHScoreForCollege103
                                 }
                             }
 
-                            if (dr2["年級"].ToString() == "2" && dr2["學期"].ToString() == "1" && dr2["分項"].ToString().Contains("學業"))
+                            if ((dr2["年級"].ToString() == "2" || dr2["年級"].ToString() == "5") && dr2["學期"].ToString() == "1" && dr2["分項"].ToString().Contains("學業"))
                             {
                                 foreach (FieldConfig fc in _SaveFieldConfigList)
                                 {
@@ -298,7 +307,7 @@ namespace SHScoreForCollege103
                                     }
                                 }
                             }
-                            if (dr2["年級"].ToString() == "2" && dr2["學期"].ToString() == "2" && dr2["分項"].ToString().Contains("學業"))
+                            if ((dr2["年級"].ToString() == "2" || dr2["年級"].ToString() == "5") && dr2["學期"].ToString() == "2" && dr2["分項"].ToString().Contains("學業"))
                             {
                                 foreach (FieldConfig fc in _SaveFieldConfigList)
                                 {
@@ -310,7 +319,7 @@ namespace SHScoreForCollege103
                                 }
                             }
 
-                            if (dr2["年級"].ToString() == "3" && dr2["學期"].ToString() == "1" && dr2["分項"].ToString().Contains("學業"))
+                            if ((dr2["年級"].ToString() == "3" || dr2["年級"].ToString() == "6") && dr2["學期"].ToString() == "1" && dr2["分項"].ToString().Contains("學業"))
                             {
                                 foreach (FieldConfig fc in _SaveFieldConfigList)
                                 {
@@ -321,7 +330,7 @@ namespace SHScoreForCollege103
                                     }
                                 }
                             }
-                            if (dr2["年級"].ToString() == "3" && dr2["學期"].ToString() == "2" && dr2["分項"].ToString().Contains("學業"))
+                            if ((dr2["年級"].ToString() == "3" || dr2["年級"].ToString() == "6") && dr2["學期"].ToString() == "2" && dr2["分項"].ToString().Contains("學業"))
                             {
                                 foreach (FieldConfig fc in _SaveFieldConfigList)
                                 {
