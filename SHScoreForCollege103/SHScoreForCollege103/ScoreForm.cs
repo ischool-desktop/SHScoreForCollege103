@@ -276,6 +276,7 @@ namespace SHScoreForCollege103
 
                             if (_chkSScore)
                             {
+                                #region 學業原始
                                 if ((dr2["年級"].ToString() == "1" || dr2["年級"].ToString() == "4") && dr2["學期"].ToString() == "1" && dr2["分項"].ToString() == "學業(原始)")
                                 {
                                     foreach (FieldConfig fc in _SaveFieldConfigList)
@@ -298,9 +299,60 @@ namespace SHScoreForCollege103
                                         }
                                     }
                                 }
+
+                                if ((dr2["年級"].ToString() == "2" || dr2["年級"].ToString() == "5") && dr2["學期"].ToString() == "1" && dr2["分項"].ToString() == "學業(原始)")
+                                {
+                                    foreach (FieldConfig fc in _SaveFieldConfigList)
+                                    {
+                                        if (fc.FieldName == "學業總平均(高二上)")
+                                        {
+                                            newRow[fc.FieldName] = ParseEntryScore(dr2);
+                                            break;
+                                        }
+                                    }
+                                }
+
+                                if ((dr2["年級"].ToString() == "2" || dr2["年級"].ToString() == "5") && dr2["學期"].ToString() == "2" && dr2["分項"].ToString() == "學業(原始)")
+                                {
+                                    foreach (FieldConfig fc in _SaveFieldConfigList)
+                                    {
+                                        if (fc.FieldName == "學業總平均(高二下)")
+                                        {
+                                            newRow[fc.FieldName] = ParseEntryScore(dr2);
+                                            break;
+                                        }
+                                    }
+                                }
+
+
+                                if ((dr2["年級"].ToString() == "3" || dr2["年級"].ToString() == "6") && dr2["學期"].ToString() == "1" && dr2["分項"].ToString() == "學業(原始)")
+                                {
+                                    foreach (FieldConfig fc in _SaveFieldConfigList)
+                                    {
+                                        if (fc.FieldName == "學業總平均(高三上)")
+                                        {
+                                            newRow[fc.FieldName] = ParseEntryScore(dr2);
+                                            break;
+                                        }
+                                    }
+                                }
+
+                                if ((dr2["年級"].ToString() == "3" || dr2["年級"].ToString() == "6") && dr2["學期"].ToString() == "2" && dr2["分項"].ToString() == "學業(原始)")
+                                {
+                                    foreach (FieldConfig fc in _SaveFieldConfigList)
+                                    {
+                                        if (fc.FieldName == "學業總平均(高三下)")
+                                        {
+                                            newRow[fc.FieldName] = ParseEntryScore(dr2);
+                                            break;
+                                        }
+                                    }
+                                }
+                                #endregion
                             }
                             else
                             {
+                                #region 學業
                                 if ((dr2["年級"].ToString() == "1" || dr2["年級"].ToString() == "4") && dr2["學期"].ToString() == "1" && dr2["分項"].ToString() == "學業")
                                 {
                                     foreach (FieldConfig fc in _SaveFieldConfigList)
@@ -312,6 +364,7 @@ namespace SHScoreForCollege103
                                         }
                                     }
                                 }
+
                                 if ((dr2["年級"].ToString() == "1" || dr2["年級"].ToString() == "4") && dr2["學期"].ToString() == "2" && dr2["分項"].ToString() == "學業")
                                 {
                                     foreach (FieldConfig fc in _SaveFieldConfigList)
@@ -323,55 +376,56 @@ namespace SHScoreForCollege103
                                         }
                                     }
                                 }
-                            }
 
-
-                            if ((dr2["年級"].ToString() == "2" || dr2["年級"].ToString() == "5") && dr2["學期"].ToString() == "1" && dr2["分項"].ToString().Contains("學業"))
-                            {
-                                foreach (FieldConfig fc in _SaveFieldConfigList)
+                                if ((dr2["年級"].ToString() == "2" || dr2["年級"].ToString() == "5") && dr2["學期"].ToString() == "1" && dr2["分項"].ToString() == "學業")
                                 {
-                                    if (fc.FieldName.Contains("二上") && fc.FieldName.Contains("學業總平均"))
+                                    foreach (FieldConfig fc in _SaveFieldConfigList)
                                     {
-                                        newRow[fc.FieldName] = ParseEntryScore(dr2);
-                                        break;
+                                        if (fc.FieldName == "學業總平均(高二上)")
+                                        {
+                                            newRow[fc.FieldName] = ParseEntryScore(dr2);
+                                            break;
+                                        }
                                     }
                                 }
-                            }
-                            if ((dr2["年級"].ToString() == "2" || dr2["年級"].ToString() == "5") && dr2["學期"].ToString() == "2" && dr2["分項"].ToString().Contains("學業"))
-                            {
-                                foreach (FieldConfig fc in _SaveFieldConfigList)
-                                {
-                                    if (fc.FieldName.Contains("二下") && fc.FieldName.Contains("學業總平均"))
-                                    {
-                                        newRow[fc.FieldName] = ParseEntryScore(dr2);
-                                        break;
-                                    }
-                                }
-                            }
 
-                            if ((dr2["年級"].ToString() == "3" || dr2["年級"].ToString() == "6") && dr2["學期"].ToString() == "1" && dr2["分項"].ToString().Contains("學業"))
-                            {
-                                foreach (FieldConfig fc in _SaveFieldConfigList)
+                                if ((dr2["年級"].ToString() == "2" || dr2["年級"].ToString() == "5") && dr2["學期"].ToString() == "2" && dr2["分項"].ToString() == "學業")
                                 {
-                                    if (fc.FieldName.Contains("三上") && fc.FieldName.Contains("學業總平均"))
+                                    foreach (FieldConfig fc in _SaveFieldConfigList)
                                     {
-                                        newRow[fc.FieldName] = ParseEntryScore(dr2);
-                                        break;
+                                        if (fc.FieldName == "學業總平均(高二下)")
+                                        {
+                                            newRow[fc.FieldName] = ParseEntryScore(dr2);
+                                            break;
+                                        }
                                     }
                                 }
-                            }
-                            if ((dr2["年級"].ToString() == "3" || dr2["年級"].ToString() == "6") && dr2["學期"].ToString() == "2" && dr2["分項"].ToString().Contains("學業"))
-                            {
-                                foreach (FieldConfig fc in _SaveFieldConfigList)
-                                {
-                                    if (fc.FieldName.Contains("三下") && fc.FieldName.Contains("學業總平均"))
-                                    {
-                                        newRow[fc.FieldName] = ParseEntryScore(dr2);
-                                        break;
-                                    }
-                                }
-                            }
 
+                                if ((dr2["年級"].ToString() == "3" || dr2["年級"].ToString() == "6") && dr2["學期"].ToString() == "1" && dr2["分項"].ToString() == "學業")
+                                {
+                                    foreach (FieldConfig fc in _SaveFieldConfigList)
+                                    {
+                                        if (fc.FieldName == "學業總平均(高三上)")
+                                        {
+                                            newRow[fc.FieldName] = ParseEntryScore(dr2);
+                                            break;
+                                        }
+                                    }
+                                }
+
+                                if ((dr2["年級"].ToString() == "3" || dr2["年級"].ToString() == "6") && dr2["學期"].ToString() == "2" && dr2["分項"].ToString() == "學業")
+                                {
+                                    foreach (FieldConfig fc in _SaveFieldConfigList)
+                                    {
+                                        if (fc.FieldName == "學業總平均(高三下)")
+                                        {
+                                            newRow[fc.FieldName] = ParseEntryScore(dr2);
+                                            break;
+                                        }
+                                    }
+                                }
+                                #endregion
+                            }
                         }
                     }
                     #endregion
